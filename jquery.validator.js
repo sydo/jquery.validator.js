@@ -6,17 +6,16 @@ $.fn.validate = function(options){
 		alertError:			true,
 		alertErrorMessage:	'Please fill in every required field.',
 		errorClass:			'error',
-		addIndicator:		function($element) {
+		addIndicator:		function($form, $element, indicator) {
 								var id = $element.attr('id');
-								$('label[for=' + id + ']').append(defaultOptions['indicator']);
+								$form.find('label[for=' + id + ']').append(indicator);
 							},
-		clearErrors:		function() {
-								$('*').removeClass('error');
+		clearErrors:		function($form, errorClass) {
+								$form.find('*').removeClass(errorClass);
 							},
-		errorFunction:		function($element) {
-								$element.addClass(defaultOptions.errorClass);
+		errorFunction:		function($element, errorClass) {
+								$element.addClass(errorClass);
 							}
-
 	};
 
 	return this.each(function() {
@@ -24,7 +23,7 @@ $.fn.validate = function(options){
 		var $form = $(this);
 
 		$form.find('.' + settings.className).each(function(){
-			settings['addIndicator']($(this));
+			settings['addIndicator']($form, $(this), settings['indicator']);
 		});
 
 		$form.submit(function(){
@@ -41,11 +40,11 @@ $.fn.validate = function(options){
 				}
 			});
 
-			settings.clearErrors();
+			settings.clearErrors($form, settings.errorClass);
 
 			if (errors.length > 0) {
 				for(var i = 0; i < errors.length; i++) {
-					settings.errorFunction(errors[i]);
+					settings.errorFunction(errors[i], settings.errorClass);
 				}
 				if(settings.alertError) {
 					alert(settings.alertErrorMessage);
