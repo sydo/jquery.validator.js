@@ -9,7 +9,7 @@
 			* { margin: 0; padding: 0; }
 			body { padding: 25px; }
 			table { margin: 10px 0; }
-			td { padding: 0 0 10px 0; }
+			td { padding: 4px; }
 			input, textarea { padding: 3px; }
 			input[type=text], textarea { border: 1px solid silver; width: 250px; }
 
@@ -23,11 +23,6 @@
 
 				$('.validate-advanced').validate({
 					className:		'requiredField',
-					indicator:		'<span style="color: red">*</span> ',
-					addIndicator:	function($form, $element, indicator){
-						var id = $element.attr('id');
-						$form.find('label[for=' + id + ']').prepend(indicator);
-					},
 					errorClass:		'advanced-error',
 					alertError:		false
 				});
@@ -37,7 +32,7 @@
 	<body>
 		<form method="get" class="validate-simple">
 			<h2>Simple form validation example</h2>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="5" cellspacing="5">
 				<tr>
 					<td width="150">
 						<label for="name">Required Text:</label>
@@ -57,6 +52,32 @@
 					<td><input type="text" name="optional" id="optional" /></td>
 				</tr>
 				<tr>
+					<td>
+						<label for="optional">Required Radio:</label>
+					</td>
+					<td>
+						<input type="radio" class="required" name="gender[]" id="gender-male" value="male" /> Male<br />
+						<input type="radio" class="required" name="gender[]" id="gender-female" value="female" /> Feale
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="optional">Required Checkbox:</label>
+					</td>
+					<td>
+						<input type="checkbox" class="required" name="newsletters[]"  value="1" /> Newsletter 1.<br />
+						<input type="checkbox" class="required" name="newsletters[]"  value="2" /> Newsletter 2.<br />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="optional">Required textarea:</label>
+					</td>
+					<td>
+						<textarea name="textarea" class="required"></textarea>
+					</td>
+				</tr>
+				<tr>
 					<td><input type="submit" /></td>
 				</tr>
 			</table>
@@ -64,7 +85,7 @@
 
 		<form class="validate-advanced">
 			<h2>Advanced form validation example</h2>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="5" cellspacing="5">
 				<tr>
 					<td width="150">
 						<label for="name">Required Text:</label>
@@ -82,6 +103,24 @@
 						<label for="optional">Optional Text:</label>
 					</td>
 					<td><input type="text" name="optional" id="optional" /></td>
+				</tr>
+				<tr>
+					<td>
+						<label for="optional">Required Radio:</label>
+					</td>
+					<td>
+						<input type="radio" class="requiredField" name="gender[]" id="gender-male" value="male" /> Male<br />
+						<input type="radio" class="requiredField" name="gender[]" id="gender-female" value="female" /> Feale
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="optional">Required Checkbox:</label>
+					</td>
+					<td>
+						<input type="checkbox" class="requiredField" name="newsletters[]"  value="1" /> Newsletter 1.<br />
+						<input type="checkbox" class="requiredField" name="newsletters[]"  value="2" /> Newsletter 2.<br />
+					</td>
 				</tr>
 				<tr>
 					<td><input type="submit" /></td>

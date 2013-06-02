@@ -2,36 +2,68 @@ $.fn.validate = function(options){
 
 	var defaultOptions = {
 		className:			'required',
-		indicator:			'<span style="color: red">*</span>',
 		alertError:			true,
 		alertErrorMessage:	'Please fill in every required field.',
 		errorClass:			'error',
-		addIndicator:		function($form, $element, indicator) {
-								var id = $element.attr('id');
-								$form.find('label[for=' + id + ']').append(indicator);
-							},
 		clearErrors:		function($form, errorClass) {
-								$form.find('*').removeClass(errorClass);
-							},
+			$form.find('*').removeClass(errorClass);
+		},
 		errorFunction:		function($element, errorClass) {
-								$element.addClass(errorClass);
-							}
+			switch($element.prop('tagName')) {
+				case 'INPUT':
+					switch($element.attr('type')) {
+						case 'text':
+						case 'password':
+						case 'radio':
+						case 'checkbox':
+							$element.closest('td').addClass(errorClass);
+						break;
+					}
+				break;
+				case 'TEXTAREA':
+					$element.closest('td').addClass(errorClass);
+				break;
+			}
+		}
 	};
 
 	return this.each(function() {
         var settings = $.extend(defaultOptions, options);
 		var $form = $(this);
 
-		$form.find('.' + settings.className).each(function(){
-			settings['addIndicator']($form, $(this), settings['indicator']);
-		});
-
 		$form.submit(function(){
 			var errors = [];
+			var radioNames = [];
+			var checkboxNames = [];
+
+			$form.find("input[type=radio]." + settings.className).each(function(){
+				var name = $(this).attr("name");
+				if ($.inArray(name, radioNames) == -1) radioNames.push(name);
+			});
+
+			$form.find("input[type=checkbox]." + settings.className).each(function(){
+				var name = $(this).attr("name");
+				if ($.inArray(name, checkboxNames) == -1) checkboxNames.push(name);
+			});
+
 			$form.find('.' + settings.className).each(function(){
 				var $element = $(this);
 				switch($element.prop('tagName')) {
 					case 'INPUT':
+						switch($element.attr('type')) {
+							case 'text':
+							case 'password':
+								if($element.val() == '') {
+									errors.push($element);
+								}
+							break;
+							case 'radio':
+								if ($element.is(':checked')) radioNames.splice($element.attr('name'), 1);
+							break;
+							case 'checkbox':
+								if ($element.is(':checked')) checkboxNames.splice($element.attr('name'), 1);
+							break;
+						}
 					case 'TEXTAREA':
 						if($element.val() == '') {
 							errors.push($element);
@@ -39,6 +71,16 @@ $.fn.validate = function(options){
 					break;
 				}
 			});
+
+			for (var i = 0; i < radioNames.length; i++) {
+				var $element = $form.find('input[name="' + radioNames[i] + '"]');
+				errors.push($element);
+			}
+
+			for (var i = 0; i < checkboxNames.length; i++) {
+				var $element = $form.find('input[name="' + checkboxNames[i] + '"]');
+				errors.push($element);
+			}
 
 			settings.clearErrors($form, settings.errorClass);
 
