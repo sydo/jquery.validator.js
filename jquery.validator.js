@@ -23,6 +23,9 @@ $.fn.validate = function(options){
 				case 'TEXTAREA':
 					$element.closest('td').addClass(errorClass);
 				break;
+				case 'SELECT':
+					$element.closest('td').addClass(errorClass);
+				break;
 			}
 		}
 	};
@@ -65,6 +68,11 @@ $.fn.validate = function(options){
 							break;
 						}
 					case 'TEXTAREA':
+						if($element.val() == '') {
+							errors.push($element);
+						}
+					break;
+					case 'SELECT':
 						if($element.val() == '') {
 							errors.push($element);
 						}
